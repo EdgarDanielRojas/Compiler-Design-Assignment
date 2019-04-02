@@ -28,6 +28,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string.h>           
 
 /**
  * @struct item

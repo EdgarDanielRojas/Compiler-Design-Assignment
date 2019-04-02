@@ -127,7 +127,24 @@ entry_p NewItem (char * varName_p, enum myTypes type,
                  unsigned int lineNumber){
 	entry_p temp = g_hash_table_lookup(SymbolTable,varName_p);
 	if(temp == NULL){
-		createSymbol(type,varName_p);
+		temp = (entry_p) malloc(sizeof(entry_p));
+
+		temp->name_p = g_strdup(varName_p);
+		temp->type = type;
+		temp->lineNumber = lineNumber;
+		if(type == integer)
+			temp->value.i_value = 0;
+		else
+			temp->value.r_value = 0.0;
+		  /* Will add the value and type correcty in a more advanced implementation */
+		  //new_node->value = 0;
+		if(g_hash_table_insert(SymbolTable, temp->name, temp)) {
+			return temp;
+		}
+		else {
+		    printf("Error: While inserting the node");
+		    exit(EXIT_FAILURE);
+		}
 	}
 	return temp;
 }
