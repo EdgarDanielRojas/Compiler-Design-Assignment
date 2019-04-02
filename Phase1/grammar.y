@@ -1,6 +1,7 @@
 %{
 #include <string.h>
 #include <stdio.h>
+#include "UserDefined.h"
 
   /* Function definitions */
 void yyerror (char *string);
@@ -103,7 +104,6 @@ epsilon:
 int yylex();
 
 #include "lex.yy.c"
-
 /* Bison does NOT implement yyerror, so define it here */
 void yyerror (char *string){
   printf ("Syntax error %s\n",yytext);
@@ -111,5 +111,8 @@ void yyerror (char *string){
 
 /* Bison does NOT define the main entry point so define it here */
 int main (void){
-  yyparse();
+    SymbolTable = g_hash_table_new_full(g_str_hash, g_str_equal,NULL,(GDestroyNotify)freeItem);
+    yyparse();
+    printTable(SymbolTable);
+    DestroyTable(SymbolTable);
 }
