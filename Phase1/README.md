@@ -35,13 +35,13 @@ Systantic Analyzer for Programming Languages Class. This program acts as a compl
 ### Linux Users
 1. Compile the calc_grammar.y file using  ```bison -d grammar.y```
 2. Compile the analyzer.l file using ```flex analyzer.l```
-3. Files named lex.yy.c,calc_grammar.tab.c and calc_grammar.tab.h are generated, that is compiled using gcc with the following command ```gcc calc_grammar.tab.c -o calc -lfl```
+3. Files named lex.yy.c,calc_grammar.tab.c and calc_grammar.tab.h are generated, that is compiled using gcc with the following command ```gcc `pkg-config gtk+-2.0 --cflags --libs` -O2 UserDefined.c grammar.tab.c -o calc -lfl```
 4. An output file is generated named a.out, or if using the -o flag, it will have the name indicated.
 
 ### Mac Users
 1. Compile the calc_grammar.y file using  ```bison -v grammar.y```
 2. Compile the analyzer.l file using ```flex analyzer.l```
-3. Files named lex.yy.c,calc_grammar.tab.c and calc_grammar.tab.h are generated, that is compiled using gcc with the following command ```gcc calc_grammar.tab.c -o calc -ll```
+3. Files named lex.yy.c,calc_grammar.tab.c and calc_grammar.tab.h are generated, that is compiled using gcc with the following command ```gcc `pkg-config gtk+-2.0 --cflags --libs` -O2 UserDefined.c grammar.tab.c -o calc -ll```
 4. An output file is generated named a.out, or if using the -o flag, it will have the name indicated.
 
 # How to Run
