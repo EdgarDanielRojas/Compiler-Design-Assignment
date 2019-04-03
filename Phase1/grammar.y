@@ -5,6 +5,7 @@
 
   /* Function definitions */
 void yyerror (char *string);
+extern int yylineno;
 
  /* Removes the warning of yylex() not defined when using C99 */
 #if YYBISON
@@ -13,6 +14,13 @@ void yyerror (char *string);
 #endif
 
 %}
+
+%union {
+  int     intVal;
+  float   floatVal;
+  char *  stringVal;
+  entry_p tableEntry;
+}
 
  /* Here the declaration of all the tokens used is made */
 %token INTEGER
@@ -44,7 +52,13 @@ void yyerror (char *string);
 %token OCT_NUM
 %token HEX_NUM
 %token FLOAT_NUM
-%token ID
+%token <stringVal> ID
+
+%type <intVal> type
+%type <tableEntry> variable 
+//%type <floatVal> factor term simple_exp exp stmt_seq block stmt
+%type <floatVal> FLOAT_NUM
+%type <intVal> INT_NUM
 
 %%
    /* include all of the grammar so that bison can parse correctly*/
@@ -54,14 +68,19 @@ program: var_dec stmt_seq   {printf("Good Grammar\n");}
 var_dec: var_dec single_dec  | epsilon
             ;
 
-single_dec: type ID SEMI
+single_dec: type ID SEMI { if(NewItem($2,$1,yylineno)){
+                                printf("Duplicate variable '%s' on line %d",$2,yylineno);
+                            } 
+                        }
             ;
 
-type: INTEGER | FLOAT
+type: INTEGER { $$ = integer;}
+    | FLOAT   { $$ = real;}
             ;
 
 
-stmt_seq: stmt_seq stmt  | epsilon
+stmt_seq: stmt_seq stmt  
+    | epsilon
             ;
 
 stmt:  IF exp THEN stmt  
@@ -93,7 +112,9 @@ factor: LPAREN exp RPAREN | INT_NUM  | FLOAT_NUM  | variable
             ;
 
 
-variable: ID 
+variable: ID {
+                $$ = FindItem($1);
+                }
             ;
 
 epsilon:
@@ -106,13 +127,13 @@ int yylex();
 #include "lex.yy.c"
 /* Bison does NOT implement yyerror, so define it here */
 void yyerror (char *string){
-  printf ("Syntax error %s\n",yytext);
+  printf ("Syntax error %s on line %d\n",yytext,yylineno);
 }
 
 /* Bison does NOT define the main entry point so define it here */
 int main (void){
-    SymbolTable = g_hash_table_new_full(g_str_hash, g_str_equal,NULL,(GDestroyNotify)freeItem);
+    SymbolTable = g_hash_table_new_full(g_str_hash, g_str_equal,NULL,(GDestroyNotify)FreeItem);
     yyparse();
-    printTable(SymbolTable);
+    PrintTable(SymbolTable);
     DestroyTable(SymbolTable);
 }

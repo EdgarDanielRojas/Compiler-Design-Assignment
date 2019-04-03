@@ -25,7 +25,7 @@
  *
  */
 
-#include "table.h"
+#include "UserDefined.h"
 
 /**
  *
@@ -45,10 +45,10 @@
  */
 int PrintItem (entry_p theEntry_p){
 	if(theEntry_p->type == integer) {
-	    printf("%s \t %s \t \n",table_node->name, "INTEGER");
+	    printf("%s \t %s \t %d\n",theEntry_p->name_p, "INTEGER",theEntry_p->lineNumber);
   	}
 	else {
-	    printf("%s \t %s \t \n",table_node->name, "FLOAT");
+	    printf("%s \t %s \t %d\n",theEntry_p->name_p, "FLOAT  ",theEntry_p->lineNumber);
 	}
 }
 
@@ -72,7 +72,7 @@ int PrintItem (entry_p theEntry_p){
  *
  */
 void SupportPrint (gpointer key_p, gpointer value_p, gpointer user_p){
-	entry_p temp = (entry_p) value;
+	entry_p temp = (entry_p) value_p;
 	PrintItem(temp);
 }
 
@@ -138,8 +138,8 @@ entry_p NewItem (char * varName_p, enum myTypes type,
 			temp->value.r_value = 0.0;
 		  /* Will add the value and type correcty in a more advanced implementation */
 		  //new_node->value = 0;
-		if(g_hash_table_insert(SymbolTable, temp->name, temp)) {
-			return temp;
+		if(g_hash_table_insert(SymbolTable, temp->name_p, temp)) {
+			return NULL;
 		}
 		else {
 		    printf("Error: While inserting the node");
@@ -195,7 +195,7 @@ entry_p FindItem (char * varName_p){
  * @endcode
  *
  */
-void UpdateItem(char * varName_p, enum myTypes type, union num_val value){
+void UpdateItem(char * varName_p, enum myTypes type, union val value){
 	entry_p node = g_hash_table_lookup(SymbolTable, varName_p);
 	if(node != NULL) {
 		node->type = type;
@@ -223,7 +223,7 @@ void UpdateItem(char * varName_p, enum myTypes type, union num_val value){
  *          user-defined structure.
  */
 int FreeItem (entry_p theEntry_p){
-	free(theEntry_p->name);
+	free(theEntry_p->name_p);
 	free(theEntry_p);
 	return(EXIT_SUCCESS);
 }

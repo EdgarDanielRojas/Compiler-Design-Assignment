@@ -28,7 +28,7 @@
 #include <glib.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string.h>           
+#include <stdio.h>           
 
 /**
  * @struct item
@@ -191,8 +191,7 @@ int PrintTable (GHashTable * theTable_p);
  * @endcode
  *
  */
-entry_p NewItem (char * varName_p, enum myTypes type,
-                 unsigned int lineNumber);
+entry_p NewItem (char * varName_p, enum myTypes type, unsigned int lineNumber);
 
 /**
  *
@@ -231,7 +230,7 @@ entry_p FindItem (char * varName_p);
  * @endcode
  *
  */
-void UpdateItem(char * identifier_name, enum myTypes type, union num_val value);
+void UpdateItem(char * identifier_name, enum myTypes type, union val value);
 
 /**
  *

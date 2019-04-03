@@ -1,5 +1,10 @@
   /* This is the declaration section */
   /* This is the rule definition */
+%{
+  int line = 1;
+%}
+
+%option yylineno
 
 %%
   /* This is the exact same file from the previous assignment, with the exception that it returns the value of the Token instead of incrementing counters */
@@ -40,12 +45,12 @@ do          {return DO;}
 0(x|X)[0-9A-Fa-f]+  {return HEX_NUM;}
 [+-]?[0-9]*"."[0-9]+([eE][-+]?[0-9]+)?		{return FLOAT_NUM;}
   /* These are the definitions for Identifier symbols, we could combine them in one with various | but I decided to seperate them. */
-[A-Za-z_][A-Za-z0-9_]*						{return ID;}
+[A-Za-z_][A-Za-z0-9_]*						{yylval.stringVal = strdup(yytext);;return ID;}
   /* These are the definitions for comment symbols, we could combine them in one with various | but I decided to seperate them. */
-"/*"((("*"[^/])?)|[^*])*"*/"				
+"/*"((("*"[^/])?)|[^*])*"*/"				{for(int i = 0; i<strlen(yytext);i++){if(yytext[i]=='\n')line++;}}
 "//".*										
   /* Expresions for blank spaces in the files*/
-\n  
+\n  {line++;}
 \t
 \r
 \v
