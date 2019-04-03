@@ -1,5 +1,4 @@
-/* Definitions go first
- */
+/* Definitions go first */
 
 int j;
 float i;
